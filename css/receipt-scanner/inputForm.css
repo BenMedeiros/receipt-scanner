@@ -1,0 +1,110 @@
+#gameConfig, #gameConfig * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#gameConfig {
+    background-color: var(--color-menu-backdrop);
+    color: var(--color-menu-border);
+    font-family: Arial;
+    padding: 0 1rem 1rem 1rem;
+    border: 1px solid var(--color-menu-border);
+    border-radius: .5rem;
+    margin: 0.5rem;
+    /*float: left;*/
+    width: 15rem;
+    height: auto;
+    display: block;
+    /*position: absolute;*/
+    /*to remain at top of page*/
+    /*position: fixed;*/
+    z-index: 100;
+    overflow: hidden;
+    /*can't transition height when its auto*/
+    transition: width .1s;
+    text-align: center;
+}
+
+#gameConfig.collapsed {
+    height: 3rem;
+    width: 8rem;
+    transition: width 1s 1.2s;
+}
+
+/*phones, so that the controls will go on top*/
+@media (max-aspect-ratio: 5/8) {
+    #gameConfig {
+        margin: 0;
+    }
+
+    #gameConfig:not(.collapsed) {
+        height: auto;
+        width: auto;
+        max-width: 100%;
+    }
+
+    #gameConfig.collapsed {
+        height: 1.5rem;
+    }
+
+    #gameConfig.collapsed > h3 {
+        margin-top: .5rem;
+    }
+
+    #gameConfig.collapsed label, #gameConfig.collapsed input {
+        visibility: hidden;
+    }
+}
+
+#gameConfig > h3 {
+    text-align: left;
+}
+
+#gameConfig label {
+    text-align: right;
+    display: inline-block;
+    height: 1.3rem;
+    width: 50%;
+    min-width: 5rem;
+    padding-right: 4%;
+}
+
+#gameConfig input, select {
+    height: 1.3rem;
+    width: 40%;
+    margin: .2rem 0;
+    display: inline-block;
+    border: 1px solid var(--color-menu-border);
+    background-color: var(--color-menu-border);
+    border-radius: .5rem;
+    box-sizing: border-box;
+}
+
+#gameConfig input:read-only {
+    border: 0;
+    box-shadow: none;
+    background-color: var(--color-menu-subtext);
+}
+
+#gameConfig input::placeholder {
+    color: var(--color-menu-backdrop);
+}
+
+#gameConfig input:hover, select:hover {
+    border: 1px solid black;
+}
+
+#gameConfig button {
+    background-color: var(--color-backdrop);
+    color: var(--color-text);
+    padding: 1.1rem 1.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 1rem;
+}
+
+#gameConfig button:hover {
+    background-color: #45a049;
+    border: 1px solid black;
+}

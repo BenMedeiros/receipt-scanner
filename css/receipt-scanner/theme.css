@@ -17,3 +17,14 @@
     --color-scrollbar: #5b6367;
     --color-scrollbar-hover: #555;
 }
+
+body {
+  background-size: 50%;
+  background-color: darkgrey;
+  background-image: url(/game-numbers/img/pokemon/backgrounds/background_line_art_1.jpg);
+  background-blend-mode: multiply;
+}
+
+i {
+  vertical-align: bottom;
+}
