@@ -1,16 +1,16 @@
 'use strict';
 
-const supportedTypes = ['number', 'string', 'checkbox'];
+const supportedTypes = ['number', 'string', 'checkbox', 'date'];
 
 export class LabelInputType {
   element = null;
   parentsElements = [];
 
-  constructor(name, type, labelText, value, placeholder, readOnly) {
+  constructor(name, type, labelText, initialValue, placeholder, readOnly) {
     this.name = name;
     this.type = type;
     this.labelText = labelText;
-    this.value = value;
+    this.initialValue = initialValue;
     this.placeholder = placeholder;
     this.readOnly = readOnly;
 
@@ -35,13 +35,17 @@ export class LabelInputType {
     inputEl.type = this.type;
     inputEl.id = this.name;
     inputEl.name = this.name;
-    if (this.value !== undefined) {
+
+    if (this.initialValue !== undefined) {
       if (this.type === 'checkbox') {
-        inputEl.checked = this.value;
+        inputEl.checked = this.initialValue;
       } else {
-        inputEl.value = this.value;
+        inputEl.initialValue = this.initialValue;
       }
     }
+
+    if(this.type === 'number') inputEl.step = '.01';
+
     if (this.placeholder !== undefined) inputEl.placeholder = this.placeholder;
     if (this.readOnly) inputEl.readOnly = true;
     divEl.appendChild(inputEl);
@@ -58,6 +62,8 @@ export class LabelInputType {
       return String(this.element.value);
     } else if (this.type === 'checkbox') {
       return this.element.checked;
+    } else if (this.type === 'date') {
+      return new Date(this.element.value);
     } else {
       return this.element.value;
     }

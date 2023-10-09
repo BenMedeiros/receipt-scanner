@@ -1,9 +1,9 @@
-#gameConfig, #gameConfig * {
+#inputForm, #inputForm * {
     user-select: none;
     -webkit-user-select: none;
 }
 
-#gameConfig {
+#inputForm {
     background-color: var(--color-menu-backdrop);
     color: var(--color-menu-border);
     font-family: Arial;
@@ -25,53 +25,36 @@
     text-align: center;
 }
 
-#gameConfig.collapsed {
-    height: 3rem;
-    width: 8rem;
-    transition: width 1s 1.2s;
-}
-
 /*phones, so that the controls will go on top*/
 @media (max-aspect-ratio: 5/8) {
-    #gameConfig {
+    #inputForm {
         margin: 0;
     }
 
-    #gameConfig:not(.collapsed) {
+    #inputForm:not(.collapsed) {
         height: auto;
         width: auto;
         max-width: 100%;
     }
 
-    #gameConfig.collapsed {
-        height: 1.5rem;
-    }
-
-    #gameConfig.collapsed > h3 {
-        margin-top: .5rem;
-    }
-
-    #gameConfig.collapsed label, #gameConfig.collapsed input {
-        visibility: hidden;
-    }
 }
 
-#gameConfig > h3 {
+#inputForm > h3 {
     text-align: left;
 }
 
-#gameConfig label {
+#inputForm label {
     text-align: right;
     display: inline-block;
     height: 1.3rem;
-    width: 50%;
+    width: 30%;
     min-width: 5rem;
     padding-right: 4%;
 }
 
-#gameConfig input, select {
+#inputForm input, select {
     height: 1.3rem;
-    width: 40%;
+    width: 50%;
     margin: .2rem 0;
     display: inline-block;
     border: 1px solid var(--color-menu-border);
@@ -80,21 +63,21 @@
     box-sizing: border-box;
 }
 
-#gameConfig input:read-only {
+#inputForm input:read-only {
     border: 0;
     box-shadow: none;
     background-color: var(--color-menu-subtext);
 }
 
-#gameConfig input::placeholder {
+#inputForm input::placeholder {
     color: var(--color-menu-backdrop);
 }
 
-#gameConfig input:hover, select:hover {
+#inputForm input:hover, select:hover {
     border: 1px solid black;
 }
 
-#gameConfig button {
+#inputForm button {
     background-color: var(--color-backdrop);
     color: var(--color-text);
     padding: 1.1rem 1.3rem;
@@ -104,7 +87,7 @@
     margin: 1rem;
 }
 
-#gameConfig button:hover {
+#inputForm button:hover {
     background-color: #45a049;
     border: 1px solid black;
 }
