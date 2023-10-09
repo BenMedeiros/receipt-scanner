@@ -46,7 +46,12 @@ export class LabelInputType {
 
     if(this.type === 'number') inputEl.step = '.01';
 
-    if (this.placeholder !== undefined) inputEl.placeholder = this.placeholder;
+    if (this.placeholder !== undefined) {
+      if(this.initialValue !== null && this.initialValue !== undefined){
+        throw new Error('read only fields use placeholder');
+      }
+      inputEl.placeholder = this.placeholder;
+    }
     if (this.readOnly) inputEl.readOnly = true;
     divEl.appendChild(inputEl);
     this.element = inputEl;
