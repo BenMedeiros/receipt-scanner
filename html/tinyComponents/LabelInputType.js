@@ -94,7 +94,22 @@ export class LabelInputType {
     }
   }
 
-  destory() {
+  isInitialValue() {
+    console.log('initial value', this.initialValue,'v=', this.element.value);
+    if(this.type === 'checkbox'){
+      if(this.initialValue === true){
+        return this.element.checked === true;
+      }else{
+        return this.element.checked !== true;
+      }
+    }else{
+      if(this.element.value === this.initialValue) return true;
+      if(this.element.value === '' && !this.initialValue) return true;
+      return false;
+    }
+  }
+
+  destroy() {
     if (this.element) this.element.remove();
   }
 }

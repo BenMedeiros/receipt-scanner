@@ -29,7 +29,10 @@ export class ReceiptType {
     this.dateInput = new LabelInputType('date', 'date', 'Date');
     this.totalInput = new LabelInputType('total', 'currency', 'Total $');
 
-    this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity']);
+    this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity'],
+      () => {
+        this.addItemLine();
+      });
     this.lineInputs = [];
 
     this.addLineInput = new ButtonType('addLine', 'Add Line', () => this.addItemLine());
@@ -46,6 +49,7 @@ export class ReceiptType {
   }
 
   addItemLine() {
+    console.log('addItemLine');
     const newLine = {
       item: new LabelInputType('item', 'string'),
       price: new LabelInputType('price', 'currency'),

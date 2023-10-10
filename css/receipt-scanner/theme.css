@@ -43,7 +43,7 @@ th, td {
 }
 
 td > input {
-  width: 90%; /*causes issues with using th.width*/
+  width: 95%; /*causes issues with using th.width*/
   background-color: var(--color-menu-border);
 }
 
