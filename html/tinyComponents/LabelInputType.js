@@ -1,14 +1,28 @@
 'use strict';
 
-const supportedTypes = ['number', 'string', 'checkbox', 'date'];
+const supportedTypes = ['number', 'integer', 'currency', 'string', 'checkbox', 'date'];
 
 export class LabelInputType {
   element = null;
   parentsElements = [];
 
   constructor(name, type, labelText, initialValue, placeholder, readOnly) {
+    this.id = name;
     this.name = name;
-    this.type = type;
+    //wrapped the type for common scenarios
+    if (type === 'number') {
+      this.step = 'any';
+      this.type = 'number';
+    } else if (type === 'integer') {
+      this.step = '1';
+      this.type = 'number';
+    } else if (type === 'currency') {
+      this.step = '.01'
+      this.type = 'number';
+    } else {
+      this.type = type;
+    }
+
     this.labelText = labelText;
     this.initialValue = initialValue;
     this.placeholder = placeholder;
@@ -24,40 +38,46 @@ export class LabelInputType {
       console.error('Already exists in this element', this);
     }
 
-    const divEl = document.createElement("div");
-
-    const labelEl = document.createElement("label");
-    labelEl.htmlFor = this.name;
-    labelEl.innerText = this.labelText;
-    divEl.appendChild(labelEl);
-
-    const inputEl = document.createElement("input");
-    inputEl.type = this.type;
-    inputEl.id = this.name;
-    inputEl.name = this.name;
+    this.element = document.createElement("input");
+    this.element.type = this.type;
+    this.element.id = this.id;
+    this.element.name = this.name;
 
     if (this.initialValue !== undefined) {
       if (this.type === 'checkbox') {
-        inputEl.checked = this.initialValue;
+        this.element.checked = this.initialValue;
       } else {
-        inputEl.initialValue = this.initialValue;
+        this.element.initialValue = this.initialValue;
       }
     }
 
-    if(this.type === 'number') inputEl.step = '.01';
+    if (this.step !== undefined) this.element.step = this.step;
+    if (this.readOnly) this.element.readOnly = true;
 
     if (this.placeholder !== undefined) {
-      if(this.initialValue !== null && this.initialValue !== undefined){
+      if (this.initialValue !== null && this.initialValue !== undefined) {
         throw new Error('read only fields use placeholder');
       }
-      inputEl.placeholder = this.placeholder;
+      this.element.placeholder = this.placeholder;
     }
-    if (this.readOnly) inputEl.readOnly = true;
-    divEl.appendChild(inputEl);
-    this.element = inputEl;
 
-    parentEl.appendChild(divEl);
+    //if no label, just create the input (ex. tables)
+    if (this.labelText) {
+      const divEl = document.createElement("div");
+
+      const labelEl = document.createElement("label");
+      labelEl.htmlFor = this.name;
+      labelEl.innerText = this.labelText;
+
+      divEl.appendChild(labelEl);
+      divEl.appendChild(this.element);
+      parentEl.appendChild(divEl);
+    } else {
+      parentEl.appendChild(this.element);
+    }
+
     this.parentsElements.push(parentEl);
+    return this.element;
   }
 
   getValue() {
@@ -72,5 +92,9 @@ export class LabelInputType {
     } else {
       return this.element.value;
     }
+  }
+
+  destory() {
+    if (this.element) this.element.remove();
   }
 }

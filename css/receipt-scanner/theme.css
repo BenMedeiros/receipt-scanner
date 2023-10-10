@@ -28,3 +28,29 @@ body {
 i {
   vertical-align: bottom;
 }
+
+table {
+  display: block;
+  overflow-x: scroll;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid var(--color-menu-border);
+  border-collapse: collapse;
+  padding: .3rem;
+  width: auto;
+}
+
+td > input {
+  width: 90%; /*causes issues with using th.width*/
+  background-color: var(--color-menu-border);
+}
+
+table caption {
+  text-align: left;
+  caption-side: top;
+  color: var(--color-menu-border);
+  font-size: 1.17em;
+  font-weight: bold;
+}

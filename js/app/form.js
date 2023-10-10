@@ -14,7 +14,6 @@ export function createGenericForm(title, inputTypes) {
   for (const inputType of inputTypes) {
     inputType.createElementIn(inputForm);
   }
-  //finally add the form to main
-  document.getElementById("main").appendChild(inputForm);
+
   return inputForm;
 }
