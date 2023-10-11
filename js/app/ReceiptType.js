@@ -2,7 +2,7 @@
 
 import {LabelInputType} from "../../html/tinyComponents/LabelInputType.js";
 import {ButtonType} from "../../html/tinyComponents/ButtonType.js";
-import {createGenericForm} from "./form.js";
+import {createGenericForm, scrollCarouselToForm} from "./form.js";
 import {TableType} from "../../html/components/TableType.js";
 
 let receipts = localStorage.getItem('receipts');
@@ -35,6 +35,7 @@ export class ReceiptType {
     } else {
       //  new receipt
       this.id = receipts.push({
+        isNew: true,
         store: null,
         date: null,
         total: null,
@@ -63,20 +64,27 @@ export class ReceiptType {
       this.readForm()
     });
 
-    this.form = createGenericForm('New Receipt', [
-      this.idInput,
-      this.storeInput,
-      this.dateInput,
-      this.totalInput,
-      this.tableInput,
-      this.submitInput,
-      this.deleteInput
-    ]);
+    this.form = createGenericForm(this.id,
+      receipts[this.id].isNew ? 'New Receipt' : 'Edit ' + this.id, [
+        this.idInput,
+        this.storeInput,
+        this.dateInput,
+        this.totalInput,
+        this.tableInput,
+        this.submitInput,
+        this.deleteInput
+      ]);
 
     //start with a blank row
     this.addItemLine();
 
-    document.getElementById("main").appendChild(this.form);
+    //  goTo newly loaded form
+    scrollCarouselToForm(this.id);
+    //  add goToForm on nav-bar TODO remove from nav on delete
+    const goToBtn = new ButtonType('goTo' + this.id, 'goTo ' + this.id, () => {
+      scrollCarouselToForm(this.id);
+    })
+    goToBtn.createElementIn(document.getElementById("navigation-bar"));
   }
 
   addItemLine() {

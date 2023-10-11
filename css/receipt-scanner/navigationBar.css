@@ -1,26 +1,27 @@
 #navigation-bar {
-    width: auto;
-    display: flex;
-    background-color: var(--color-menu-backdrop);
-    color: var(--color-menu-border);
+  width: auto;
+  display: flex;
+  background-color: var(--color-menu-backdrop);
+  color: var(--color-menu-border);
+  overflow-x: auto;
 }
 
 #navigation-bar > button {
-    display: block;
-    padding: 0;
-    border: 0;
-    background-color: var(--color-menu-backdrop);
+  display: block;
+  padding: 0;
+  border: 0;
+  background-color: var(--color-menu-backdrop);
 }
 
 #navigation-bar > button > * {
-    display: block;
-    font-size: 1.3rem;
-    color: var(--color-menu-border);
-    background-color: var(--color-menu-backdrop);
-    text-decoration: none;
-    border: .1rem solid var(--color-menu-backdrop);
-    border-radius: .5rem;
-    padding: .5rem 1rem;
+  display: block;
+  font-size: 1.3rem;
+  color: var(--color-menu-border);
+  background-color: var(--color-menu-backdrop);
+  text-decoration: none;
+  border: .1rem solid var(--color-menu-backdrop);
+  border-radius: .5rem;
+  padding: .5rem 1rem;
 }
 
 /*#navigation-bar > button > a:visited {*/
@@ -28,8 +29,8 @@
 /*}*/
 
 #navigation-bar > button:hover:not(:disabled) > * {
-    background-color: var(--color-menu-btn-hover);
-    border-style: solid;
+  background-color: var(--color-menu-btn-hover);
+  border-style: solid;
 }
 
 /*@media (max-aspect-ratio: 5/8) {*/

@@ -1,102 +1,117 @@
-#inputForm, #inputForm * {
-    user-select: none;
-    -webkit-user-select: none;
+.inputForm, .inputForm * {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-#inputForm {
-    background-color: var(--color-menu-backdrop);
-    color: var(--color-menu-border);
-    font-family: Arial;
-    padding: 0 1rem 1rem 1rem;
-    border: 1px solid var(--color-menu-border);
-    border-radius: .5rem;
-    margin: 0.5rem;
-    /*float: left;*/
-    /*width: 15rem;*/
-    height: auto;
-    display: block;
-    /*position: absolute;*/
-    /*to remain at top of page*/
-    /*position: fixed;*/
-    z-index: 100;
-    overflow: hidden;
-    /*can't transition height when its auto*/
-    transition: width .1s;
-    text-align: center;
+.inputForm {
+  background-color: var(--color-menu-backdrop);
+  color: var(--color-menu-border);
+  font-family: Arial;
+  padding: 0 1rem 1rem 1rem;
+  border: 1px solid var(--color-menu-border);
+  border-radius: .5rem;
+  margin: 0.5rem;
+  width: 35rem;
+  height: auto;
+  display: block;
+  z-index: 100;
+  overflow: hidden;
+  transition: width .1s;
+  text-align: center;
 }
 
 /*phones, so that the controls will go on top*/
 @media (max-aspect-ratio: 5/8) {
-    #inputForm {
-        margin: 0;
-    }
+  .inputForm {
+    /*margin: 0;*/
+  }
 
-    #inputForm:not(.collapsed) {
-        height: auto;
-        width: auto;
-        max-width: 100%;
-    }
+  .inputForm:not(.collapsed) {
+    height: auto;
+    width: auto;
+    max-width: 80%;
+  }
 
 }
 
-#inputForm > h3 {
-    text-align: left;
+.inputForm > h3 {
+  text-align: left;
 }
 
-#inputForm label {
-    text-align: right;
-    display: inline-block;
-    height: 1.3rem;
-    width: 30%;
-    min-width: 5rem;
-    padding-right: 4%;
+.inputForm label {
+  text-align: right;
+  display: inline-block;
+  height: 1.3rem;
+  width: 30%;
+  min-width: 5rem;
+  padding-right: 4%;
 }
 
-#inputForm > div > input, select {
-    height: 1.3rem;
-    width: 50%;
-    margin: .2rem 0;
-    display: inline-block;
-    border: 1px solid var(--color-menu-border);
-    background-color: var(--color-menu-border);
-    border-radius: .5rem;
-    box-sizing: border-box;
+.inputForm > div > input, select {
+  height: 1.3rem;
+  width: 50%;
+  margin: .2rem 0;
+  display: inline-block;
+  border: 1px solid var(--color-menu-border);
+  background-color: var(--color-menu-border);
+  border-radius: .5rem;
+  box-sizing: border-box;
 }
 
-#inputForm input:read-only {
-    border: 0;
-    box-shadow: none;
-    background-color: var(--color-menu-subtext);
+.inputForm input:read-only {
+  border: 0;
+  box-shadow: none;
+  background-color: var(--color-menu-subtext);
 }
 
-#inputForm input::placeholder {
-    color: var(--color-menu-backdrop);
+.inputForm input::placeholder {
+  color: var(--color-menu-backdrop);
 }
 
-#inputForm input:hover, select:hover {
-    border: 1px solid black;
+.inputForm input:hover, select:hover {
+  border: 1px solid black;
 }
 
-#inputForm button {
-    background-color: var(--color-backdrop);
-    color: var(--color-text);
-    padding: 1.1rem 1.3rem;
-    border: var(--color-btn-border);
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 1rem;
+.inputForm button {
+  background-color: var(--color-backdrop);
+  color: var(--color-text);
+  padding: 1rem 1rem;
+  border: var(--color-btn-border);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-block: 1rem;
+  margin-inline: .7rem;
 }
 
-#inputForm button:hover {
-    background-color: var(--color-btn-hover);
-    border: 1px solid black;
+.inputForm button:hover {
+  background-color: var(--color-btn-hover);
+  border: 1px solid black;
 }
 
-button#deleteReceipt{
+button#deleteReceipt {
   background-color: var(--color-btn-delete);
   border: var(--color-btn-delete-hover);
 }
 
 button#deleteReceipt:hover {
   background-color: var(--color-btn-delete-hover);
+}
+
+/*this creates carousel effect*/
+#formSection {
+  display: flex;
+  overflow-x: scroll;
+  /*alignment must be set on the child elements below*/
+  scroll-snap-type: inline mandatory;
+}
+
+/*hide scroll bar*/
+#formSection::-webkit-scrollbar {
+  display: none;
+}
+
+/*preserves form width in carousel*/
+#formSection > form {
+  flex: none;
+  scroll-snap-align: center;
 }
