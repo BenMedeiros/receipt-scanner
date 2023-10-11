@@ -81,13 +81,22 @@
     background-color: var(--color-backdrop);
     color: var(--color-text);
     padding: 1.1rem 1.3rem;
-    border: 1px solid #ccc;
+    border: var(--color-btn-border);
     border-radius: 4px;
     cursor: pointer;
     margin: 1rem;
 }
 
 #inputForm button:hover {
-    background-color: #45a049;
+    background-color: var(--color-btn-hover);
     border: 1px solid black;
+}
+
+button#deleteReceipt{
+  background-color: var(--color-btn-delete);
+  border: var(--color-btn-delete-hover);
+}
+
+button#deleteReceipt:hover {
+  background-color: var(--color-btn-delete-hover);
 }

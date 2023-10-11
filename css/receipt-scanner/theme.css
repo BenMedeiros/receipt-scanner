@@ -1,21 +1,26 @@
 :root {
-    --color-menu-backdrop : #2f3032;
-    --color-menu-backdrop-hover: #6e6f74;
-    --color-menu-border : lightgrey;
-    --color-menu-subtext: #888888;
-    --color-menu-btn-background: #4CAF50;
-    --color-menu-btn-text: lightgrey;
-    --color-menu-btn-hover: #6e6f74;
+  --color-menu-backdrop: #2f3032;
+  --color-menu-backdrop-hover: #6e6f74;
+  --color-menu-border: lightgrey;
+  --color-menu-subtext: #888888;
+  --color-menu-btn-background: #4CAF50;
+  --color-menu-btn-text: lightgrey;
+  --color-menu-btn-hover: #6e6f74;
 
-    --color-outline: #D9D3BF;
-    --color-backdrop: #8bb54a;
-    --color-backdrop-hover: #45a049;
-    --color-text: white;
+  --color-outline: #D9D3BF;
+  --color-backdrop: #8bb54a;
+  --color-backdrop-hover: #45a049;
+  --color-text: white;
 
-    --color-card-background: #77746c;
-    --color-white: white;
-    --color-scrollbar: #5b6367;
-    --color-scrollbar-hover: #555;
+  --color-card-background: #77746c;
+  --color-white: white;
+  --color-scrollbar: #5b6367;
+  --color-scrollbar-hover: #555;
+
+  --color-btn-hover: #45a049;
+  --color-btn-border: 1px solid #ccc;
+  --color-btn-delete: #d02f2f;
+  --color-btn-delete-hover: #d11616
 }
 
 body {

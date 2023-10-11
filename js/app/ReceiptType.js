@@ -6,28 +6,49 @@ import {createGenericForm} from "./form.js";
 import {TableType} from "../../html/components/TableType.js";
 
 let receipts = localStorage.getItem('receipts');
-if (!receipts || typeof receipts !== 'object' || Array.isArray(receipts)) {
-  receipts = {};
+if (receipts) receipts = JSON.parse(receipts);
+if (!receipts || typeof receipts !== 'object' || !Array.isArray(receipts)) {
+  receipts = [];
   localStorage.setItem('receipts', JSON.stringify(receipts));
 }
 
 export const ReceiptStruct = {
   store: String,
   date: Date,
-  total: Number
+  total: Number,
+  lines: [{
+    item: String,
+    price: Number,
+    discount: Number,
+    quantity: Number
+  }]
 }
 
 export class ReceiptType {
-  constructor() {
-    this.id = crypto.randomUUID();
-    console.log(this.id);
+  constructor(receiptId) {
+    if (receiptId >= 0) {
+      if (!receipts[receiptId]) {
+        throw new Error('Receipt id not found: ' + receiptId);
+      }
+      this.id = receiptId;
+
+    } else {
+      //  new receipt
+      this.id = receipts.push({
+        store: null,
+        date: null,
+        total: null,
+        lines: []
+      }) - 1;
+    }
   }
 
   createForm() {
+    console.log(this.id, receipts[this.id]);
     this.idInput = new LabelInputType('id', 'string', 'id', null, this.id, true);
-    this.storeInput = new LabelInputType('store', 'string', 'Store');
-    this.dateInput = new LabelInputType('date', 'date', 'Date');
-    this.totalInput = new LabelInputType('total', 'currency', 'Total $');
+    this.storeInput = new LabelInputType('store', 'string', 'Store', receipts[this.id].store);
+    this.dateInput = new LabelInputType('date', 'date', 'Date', receipts[this.id].date);
+    this.totalInput = new LabelInputType('total', 'currency', 'Total $', receipts[this.id].total);
 
     this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity'],
       () => {
@@ -35,21 +56,30 @@ export class ReceiptType {
       });
     this.lineInputs = [];
 
-    this.addLineInput = new ButtonType('addLine', 'Add Line', () => this.addItemLine());
-
-    this.submitInput = new ButtonType('submit', 'Create Receipt', () => this.readForm());
+    this.submitInput = new ButtonType('createReceipt', 'Create Receipt', () => {
+      this.readForm()
+    });
+    this.deleteInput = new ButtonType('deleteReceipt', 'Delete Receipt', () => {
+      this.readForm()
+    });
 
     this.form = createGenericForm('New Receipt', [
-      this.idInput, this.storeInput, this.dateInput, this.totalInput,
+      this.idInput,
+      this.storeInput,
+      this.dateInput,
+      this.totalInput,
       this.tableInput,
-      this.addLineInput, this.submitInput
+      this.submitInput,
+      this.deleteInput
     ]);
+
+    //start with a blank row
+    this.addItemLine();
 
     document.getElementById("main").appendChild(this.form);
   }
 
   addItemLine() {
-    console.log('addItemLine');
     const newLine = {
       item: new LabelInputType('item', 'string'),
       price: new LabelInputType('price', 'currency'),
@@ -62,18 +92,23 @@ export class ReceiptType {
   }
 
   readForm() {
-    this.store = this.storeInput.getValue();
-    this.date = this.dateInput.getValue();
-    this.total = this.totalInput.getValue();
-    console.log(this);
+    receipts[this.id].store = this.storeInput.getValue();
+    receipts[this.id].date = this.dateInput.getValue();
+    receipts[this.id].total = this.totalInput.getValue();
+    receipts[this.id].lines.length = 0;
 
-    receipts[this.id] = {
-      store: this.store,
-      date: this.date,
-      total: this.total
+    for (const lineInput of this.lineInputs) {
+      const lineObj = {};
+      let isBlank = true;
+      for (const [key, inputType] of Object.entries(lineInput)) {
+        lineObj[key] = inputType.getValue();
+        if (isBlank && lineObj[key] !== null) isBlank = false;
+      }
+
+      if (!isBlank) receipts[this.id].lines.push(lineObj);
     }
-    localStorage.setItem('receipts', JSON.stringify(receipts));
 
+    localStorage.setItem('receipts', JSON.stringify(receipts));
     setTimeout(() => this.destroy(), 100);
   }
 

@@ -5,7 +5,7 @@ import {ButtonType} from "../html/tinyComponents/ButtonType.js";
 
 
 const createReceiptBtn = new ButtonType('createReceipt', 'Create Receipt', () => {
-  const receiptPrompt = new ReceiptType();
+  const receiptPrompt = new ReceiptType(1);
   receiptPrompt.createForm();
 })
 

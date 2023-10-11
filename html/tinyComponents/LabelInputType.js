@@ -1,5 +1,7 @@
 'use strict';
 
+import {formatDate} from "../../js/common/dateUtils.js";
+
 const supportedTypes = ['number', 'integer', 'currency', 'string', 'checkbox', 'date'];
 
 export class LabelInputType {
@@ -46,8 +48,10 @@ export class LabelInputType {
     if (this.initialValue !== undefined) {
       if (this.type === 'checkbox') {
         this.element.checked = this.initialValue;
+      } else if (this.type === 'date') {
+        this.element.value = formatDate(this.initialValue);
       } else {
-        this.element.initialValue = this.initialValue;
+        this.element.value = this.initialValue;
       }
     }
 
@@ -82,29 +86,38 @@ export class LabelInputType {
 
   getValue() {
     if (this.type === 'number') {
-      return this.element.value === '' ? this.placeholder : Number(this.element.value);
+      if (this.element.value === '') {
+        return this.placeholder || null;
+      }
+      return Number(this.element.value);
+
     } else if (this.type === 'string') {
+      if (this.element.value === '') return null;
       return String(this.element.value);
+
     } else if (this.type === 'checkbox') {
-      return this.element.checked;
+      return this.element.checked === true;
+
     } else if (this.type === 'date') {
+      if (!this.element.value || this.element.value === '') return null;
       return new Date(this.element.value);
+
     } else {
       return this.element.value;
     }
   }
 
   isInitialValue() {
-    console.log('initial value', this.initialValue,'v=', this.element.value);
-    if(this.type === 'checkbox'){
-      if(this.initialValue === true){
+    console.log('initial value', this.initialValue, 'v=', this.element.value);
+    if (this.type === 'checkbox') {
+      if (this.initialValue === true) {
         return this.element.checked === true;
-      }else{
+      } else {
         return this.element.checked !== true;
       }
-    }else{
-      if(this.element.value === this.initialValue) return true;
-      if(this.element.value === '' && !this.initialValue) return true;
+    } else {
+      if (this.element.value === this.initialValue) return true;
+      if (this.element.value === '' && !this.initialValue) return true;
       return false;
     }
   }
