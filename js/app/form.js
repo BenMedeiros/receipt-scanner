@@ -6,6 +6,7 @@ let formSectionEl = null;
 let formSectionNavEl = null;
 let formSectionBodyEl = null;
 let forms = {
+  // isVisible = false,
   // navEl : null,
   // formEl : null
 };
@@ -62,6 +63,7 @@ export function createFormSection() {
     entries.forEach(entry => {
       const formId = entry.target.id.substring('inputForm-'.length);
       console.log(entry.target.id, entry.isIntersecting, formId);
+      forms[formId].isVisible = entry.isIntersecting;
       forms[formId].formEl.classList.toggle('visible', entry.isIntersecting);
       forms[formId].navEl.classList.toggle('visible', entry.isIntersecting);
     });
@@ -88,3 +90,10 @@ export function createGoToFormInNav(id) {
   console.log(forms[id]);
 }
 
+export function formMsg(formId, msg) {
+  const p = document.createElement('p');
+  p.innerText = msg;
+
+  forms[formId].formEl.appendChild(p);
+  setTimeout(() => p.remove(), 3000);
+}

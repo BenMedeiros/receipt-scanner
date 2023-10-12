@@ -3,10 +3,12 @@
 export class TableType {
   rows = [];
 
-  constructor(name, cols, rowInputsConstructor) {
+  constructor(name, cols, rowInputsConstructor, initialValue) {
     this.name = name;
     this.cols = cols;
     this.rowInputsConstructor = rowInputsConstructor;
+    this.initialValue = initialValue;
+    console.log(initialValue);
   }
 
   createElementIn(parentEl) {
@@ -26,8 +28,15 @@ export class TableType {
 
     parentEl.appendChild(this.element);
 
+    //need to have this fn to be able to create new rows of data
     if (this.rowInputsConstructor) {
+      //event handler
       addNewRowOnDataEntry(this);
+      //create the initial rows passed from initialValue
+      for (const obj of this.initialValue) {
+        console.log('inpt const', obj)
+        this.rowInputsConstructor(obj);
+      }
     }
   }
 
@@ -37,6 +46,7 @@ export class TableType {
 
     for (const inputType of inputTypes) {
       const td = document.createElement("td");
+      if(inputType.name === 'item') console.log(inputType);
       inputType.createElementIn(td);
       tr.appendChild(td);
     }
@@ -56,7 +66,6 @@ function addNewRowOnDataEntry(table) {
     for (const inputType of lastRow.inputTypes) {
       //if any input in lastRow is not initial value, it's being used and we need a new one
       if (!inputType.isInitialValue()) {
-
         table.rowInputsConstructor();
         return;
       }
@@ -68,7 +77,7 @@ function addNewRowOnDataEntry(table) {
       if (!inputType.isInitialValue()) return;
     }
     //  all second row is initial value too so delete last row
-    console.log('removing row', table.rows.length-1);
+    console.log('removing row', table.rows.length - 1);
     lastRow.tr.remove();
     table.rows.pop();
   });

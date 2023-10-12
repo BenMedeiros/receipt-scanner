@@ -2,7 +2,7 @@
 
 import {LabelInputType} from "../../html/tinyComponents/LabelInputType.js";
 import {ButtonType} from "../../html/tinyComponents/ButtonType.js";
-import {createGenericForm, scrollCarouselToForm} from "./form.js";
+import {createGenericForm, scrollCarouselToForm, formMsg} from "./form.js";
 import {TableType} from "../../html/components/TableType.js";
 
 let receipts = localStorage.getItem('receipts');
@@ -12,7 +12,7 @@ if (!receipts || typeof receipts !== 'object' || !Array.isArray(receipts)) {
   localStorage.setItem('receipts', JSON.stringify(receipts));
 }
 
-export function loadAllReceipts(){
+export function loadAllReceipts() {
   for (let i = 0; i < receipts.length; i++) {
     new ReceiptType(i).createForm();
   }
@@ -59,9 +59,9 @@ export class ReceiptType {
     this.totalInput = new LabelInputType('total', 'currency', 'Total $', receipts[this.id].total);
 
     this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity'],
-      () => {
-        this.addItemLine();
-      });
+      (line) => {
+        this.addItemLine(line);
+      }, receipts[this.id].lines);
     this.lineInputs = [];
 
     this.submitInput = new ButtonType('createReceipt',
@@ -89,12 +89,13 @@ export class ReceiptType {
     scrollCarouselToForm(this.id);
   }
 
-  addItemLine() {
+  addItemLine(line) {
+    console.log(line, line ? line.item : null);
     const newLine = {
-      item: new LabelInputType('item', 'string'),
-      price: new LabelInputType('price', 'currency'),
-      discount: new LabelInputType('discount', 'currency'),
-      quantity: new LabelInputType('quantity', 'integer')
+      item: new LabelInputType('item', 'string', null, line ? line.item : null),
+      price: new LabelInputType('price', 'currency', null, line ? line.price : null),
+      discount: new LabelInputType('discount', 'currency', null, line ? line.discount : null),
+      quantity: new LabelInputType('quantity', 'integer', null, line ? line.quantity : null)
     };
     this.lineInputs.push(newLine);
     this.tableInput.addRowValues(Object.values(newLine));
@@ -119,9 +120,13 @@ export class ReceiptType {
       if (!isBlank) receipts[this.id].lines.push(lineObj);
     }
 
-
-    localStorage.setItem('receipts', JSON.stringify(receipts));
-    setTimeout(() => this.destroy(), 100);
+    if (receipts[this.id].lines.length === 0) {
+      formMsg(this.id, 'Must have lines to save receipt.');
+    } else {
+      localStorage.setItem('receipts', JSON.stringify(receipts));
+      formMsg(this.id, 'Receipt saved');
+      // setTimeout(() => this.destroy(), 100);
+    }
   }
 
   destroy() {

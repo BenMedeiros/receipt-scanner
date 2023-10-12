@@ -111,7 +111,6 @@ export class LabelInputType {
   }
 
   isInitialValue() {
-    console.log('initial value', this.initialValue, 'v=', this.element.value);
     if (this.type === 'checkbox') {
       if (this.initialValue === true) {
         return this.element.checked === true;
