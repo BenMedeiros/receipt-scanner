@@ -12,6 +12,13 @@ if (!receipts || typeof receipts !== 'object' || !Array.isArray(receipts)) {
   localStorage.setItem('receipts', JSON.stringify(receipts));
 }
 
+export function loadAllReceipts(){
+  for (let i = 0; i < receipts.length; i++) {
+    new ReceiptType(i).createForm();
+  }
+}
+
+
 export const ReceiptStruct = {
   store: String,
   date: Date,
@@ -46,7 +53,7 @@ export class ReceiptType {
 
   createForm() {
     console.log(this.id, receipts[this.id]);
-    this.idInput = new LabelInputType('id', 'string', 'id', null, this.id, true);
+    this.idInput = new LabelInputType('gid', 'string', 'id', null, this.id, true);
     this.storeInput = new LabelInputType('store', 'string', 'Store', receipts[this.id].store);
     this.dateInput = new LabelInputType('date', 'date', 'Date', receipts[this.id].date);
     this.totalInput = new LabelInputType('total', 'currency', 'Total $', receipts[this.id].total);
@@ -57,9 +64,10 @@ export class ReceiptType {
       });
     this.lineInputs = [];
 
-    this.submitInput = new ButtonType('createReceipt', 'Create Receipt', () => {
-      this.readForm()
-    });
+    this.submitInput = new ButtonType('createReceipt',
+      receipts[this.id].isNew ? 'Create Receipt' : 'Save Changes', () => {
+        this.readForm()
+      });
     this.deleteInput = new ButtonType('deleteReceipt', 'Delete Receipt', () => {
       this.readForm()
     });
@@ -77,14 +85,8 @@ export class ReceiptType {
 
     //start with a blank row
     this.addItemLine();
-
     //  goTo newly loaded form
     scrollCarouselToForm(this.id);
-    //  add goToForm on nav-bar TODO remove from nav on delete
-    const goToBtn = new ButtonType('goTo' + this.id, 'goTo ' + this.id, () => {
-      scrollCarouselToForm(this.id);
-    })
-    goToBtn.createElementIn(document.getElementById("navigation-bar"));
   }
 
   addItemLine() {
@@ -104,6 +106,7 @@ export class ReceiptType {
     receipts[this.id].date = this.dateInput.getValue();
     receipts[this.id].total = this.totalInput.getValue();
     receipts[this.id].lines.length = 0;
+    receipts[this.id].isNew = false;
 
     for (const lineInput of this.lineInputs) {
       const lineObj = {};
@@ -112,9 +115,10 @@ export class ReceiptType {
         lineObj[key] = inputType.getValue();
         if (isBlank && lineObj[key] !== null) isBlank = false;
       }
-
+      //only store line if the line isn't blank
       if (!isBlank) receipts[this.id].lines.push(lineObj);
     }
+
 
     localStorage.setItem('receipts', JSON.stringify(receipts));
     setTimeout(() => this.destroy(), 100);

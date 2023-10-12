@@ -9,6 +9,9 @@ export class LabelInputType {
   parentsElements = [];
 
   constructor(name, type, labelText, initialValue, placeholder, readOnly) {
+    if (name === 'id') {
+      throw new Error('id/name cannot be id because it messes up using el.id for some reason');
+    }
     this.id = name;
     this.name = name;
     //wrapped the type for common scenarios

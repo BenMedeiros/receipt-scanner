@@ -16,8 +16,12 @@
   display: block;
   z-index: 100;
   overflow: hidden;
-  transition: width .1s;
+  transition: width .1s, scale 2s;
   text-align: center;
+}
+
+.inputForm:not(.visible) {
+  scale: 80%;
 }
 
 /*phones, so that the controls will go on top*/
@@ -98,7 +102,8 @@ button#deleteReceipt:hover {
 }
 
 /*this creates carousel effect*/
-#formSection {
+#form-section-body {
+  padding: 1rem;
   display: flex;
   overflow-x: scroll;
   /*alignment must be set on the child elements below*/
@@ -106,12 +111,21 @@ button#deleteReceipt:hover {
 }
 
 /*hide scroll bar*/
-#formSection::-webkit-scrollbar {
+#form-section-body::-webkit-scrollbar {
   display: none;
 }
 
 /*preserves form width in carousel*/
-#formSection > form {
+#form-section-body > form {
   flex: none;
   scroll-snap-align: center;
+}
+
+#form-section-nav > button {
+  height: 2rem;
+  width: 2rem;
+}
+
+#form-section-nav > button.visible {
+  background-color: blue;
 }
