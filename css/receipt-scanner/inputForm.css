@@ -77,17 +77,21 @@
 }
 
 .inputForm button {
-  background-color: var(--color-backdrop);
-  color: var(--color-text);
   padding: 1rem 1rem;
-  border: var(--color-btn-border);
   border-radius: 4px;
   cursor: pointer;
   margin-block: 1rem;
   margin-inline: .7rem;
+  background-color: var(--color-backdrop-disabled);
 }
 
-.inputForm button:hover {
+.inputForm button:not(:disabled) {
+  background-color: var(--color-backdrop);
+  color: var(--color-text);
+  border: var(--color-btn-border);
+}
+
+.inputForm button:hover:not(:disabled) {
   background-color: var(--color-btn-hover);
   border: 1px solid black;
 }

@@ -8,8 +8,9 @@
   --color-menu-btn-hover: #6e6f74;
 
   --color-outline: #D9D3BF;
-  --color-backdrop: #8bb54a;
+  --color-backdrop: rgba(139, 181, 74, 1);
   --color-backdrop-hover: #45a049;
+  --color-backdrop-disabled: rgba(139, 181, 74, 0.5);
   --color-text: white;
 
   --color-card-background: #77746c;
@@ -50,6 +51,10 @@ th, td {
 td > input {
   width: 95%; /*causes issues with using th.width*/
   background-color: var(--color-menu-border);
+}
+
+td > input.modified {
+  background-color: var(--color-backdrop);
 }
 
 table caption {

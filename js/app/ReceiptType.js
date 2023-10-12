@@ -67,7 +67,7 @@ export class ReceiptType {
     this.submitInput = new ButtonType('createReceipt',
       receipts[this.id].isNew ? 'Create Receipt' : 'Save Changes', () => {
         this.readForm()
-      });
+      }, true);
     this.deleteInput = new ButtonType('deleteReceipt', 'Delete Receipt', () => {
       this.readForm()
     });

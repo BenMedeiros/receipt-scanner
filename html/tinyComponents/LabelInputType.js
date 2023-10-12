@@ -7,6 +7,7 @@ const supportedTypes = ['number', 'integer', 'currency', 'string', 'checkbox', '
 export class LabelInputType {
   element = null;
   parentsElements = [];
+  isModified = false;
 
   constructor(name, type, labelText, initialValue, placeholder, readOnly) {
     if (name === 'id') {
@@ -84,6 +85,7 @@ export class LabelInputType {
     }
 
     this.parentsElements.push(parentEl);
+    this.trackModified();
     return this.element;
   }
 
@@ -118,10 +120,17 @@ export class LabelInputType {
         return this.element.checked !== true;
       }
     } else {
-      if (this.element.value === this.initialValue) return true;
-      if (this.element.value === '' && !this.initialValue) return true;
-      return false;
+      return this.getValue() === this.initialValue;
     }
+  }
+
+  trackModified() {
+    this.element.classList.toggle('modified', false);
+    //use keyup because we are looking after the change has taken place
+    this.element.addEventListener('keyup', (e) => {
+      this.isModified = !this.isInitialValue();
+      this.element.classList.toggle('modified', this.isModified);
+    });
   }
 
   destroy() {

@@ -46,7 +46,7 @@ export class TableType {
 
     for (const inputType of inputTypes) {
       const td = document.createElement("td");
-      if(inputType.name === 'item') console.log(inputType);
+      if (inputType.name === 'item') console.log(inputType);
       inputType.createElementIn(td);
       tr.appendChild(td);
     }
@@ -64,8 +64,8 @@ function addNewRowOnDataEntry(table) {
     const lastRow = table.rows[table.rows.length - 1];
     if (!lastRow) return;
     for (const inputType of lastRow.inputTypes) {
-      //if any input in lastRow is not initial value, it's being used and we need a new one
-      if (!inputType.isInitialValue()) {
+      //if any input in lastRow is not null, it's being used and we need a new one
+      if (inputType.getValue() !== null) {
         table.rowInputsConstructor();
         return;
       }
@@ -74,7 +74,7 @@ function addNewRowOnDataEntry(table) {
     const secondLastRow = table.rows[table.rows.length - 2];
     if (!secondLastRow) return;
     for (const inputType of secondLastRow.inputTypes) {
-      if (!inputType.isInitialValue()) return;
+      if (inputType.getValue() !== null) return;
     }
     //  all second row is initial value too so delete last row
     console.log('removing row', table.rows.length - 1);
