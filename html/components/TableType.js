@@ -8,7 +8,6 @@ export class TableType {
     this.cols = cols;
     this.rowInputsConstructor = rowInputsConstructor;
     this.initialValue = initialValue;
-    console.log(initialValue);
   }
 
   createElementIn(parentEl) {
@@ -34,7 +33,6 @@ export class TableType {
       addNewRowOnDataEntry(this);
       //create the initial rows passed from initialValue
       for (const obj of this.initialValue) {
-        console.log('inpt const', obj)
         this.rowInputsConstructor(obj);
       }
     }
@@ -46,7 +44,6 @@ export class TableType {
 
     for (const inputType of inputTypes) {
       const td = document.createElement("td");
-      if (inputType.name === 'item') console.log(inputType);
       inputType.createElementIn(td);
       tr.appendChild(td);
     }
@@ -77,7 +74,6 @@ function addNewRowOnDataEntry(table) {
       if (inputType.getValue() !== null) return;
     }
     //  all second row is initial value too so delete last row
-    console.log('removing row', table.rows.length - 1);
     lastRow.tr.remove();
     lastRow.inputTypes.forEach(inputType => inputType.destroy());
     table.rows.pop();

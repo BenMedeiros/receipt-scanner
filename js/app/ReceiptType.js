@@ -12,11 +12,22 @@ if (!receipts || typeof receipts !== 'object' || !Array.isArray(receipts)) {
   localStorage.setItem('receipts', JSON.stringify(receipts));
 }
 
+let receiptsLoaded = false;
+
 export function loadAllReceipts() {
+  if (receiptsLoaded) {
+    console.log('Receipts already loaded');
+    return;
+  }
   for (let i = 0; i < receipts.length; i++) {
     new ReceiptType(i).createForm();
   }
+  receiptsLoaded = true;
+  console.log('receipts loaded');
+
 }
+
+
 
 
 export const ReceiptStruct = {
@@ -96,7 +107,6 @@ export class ReceiptType {
   }
 
   addItemLine(line) {
-    console.log(line, line ? line.item : null);
     const newLine = {
       item: new LabelInputType('item', 'string', null, line ? line.item : null),
       price: new LabelInputType('price', 'currency', null, line ? line.price : null),
@@ -118,7 +128,6 @@ export class ReceiptType {
     receipts[this.id].store = this.storeInput.getValue();
     receipts[this.id].date = this.dateInput.getValue();
     if (receipts[this.id].date instanceof Date) {
-      console.log('date coneretd');
       receipts[this.id].date = receipts[this.id].date.valueOf();
     }
     receipts[this.id].total = this.totalInput.getValue();

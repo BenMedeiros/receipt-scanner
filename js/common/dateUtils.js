@@ -9,7 +9,7 @@ export function formatDate(obj) {
     const result = obj.getUTCFullYear() + '-'
       + String(obj.getUTCMonth() + 1).padStart(2, '0') + '-'
       + String(obj.getUTCDate()).padStart(2, '0');
-    console.log(result);
+    // console.log(result);
     return result;
   } else if (typeof obj === 'string') {
     return obj.substring(0, 10);

@@ -76,6 +76,34 @@ export function createFormSection() {
   });
 }
 
+// returns true is was hidden but not isn't
+export function showFormSection() {
+  if (!formSectionEl) {
+    console.log('Form section not built yet.');
+  }
+
+  if (formSectionEl.style.visibility === 'hidden') {
+    formSectionEl.style.visibility = 'initial';
+    return true;
+  }
+  return false;
+}
+
+// returns true if wasn't hidden but now is
+export function hideFormSection() {
+  if (!formSectionEl) {
+    console.log('Form section not built yet.');
+  }
+
+  console.log('hiding now');
+  if (formSectionEl.style.visibility !== 'hidden') {
+    formSectionEl.style.visibility = 'hidden';
+    return true;
+  }
+  return false;
+}
+
+
 export function scrollCarouselToForm(id) {
   if (!forms[id]) throw new Error('Form ' + id + ' not loaded.');
   document.getElementById('inputForm-' + id).scrollIntoView({behavior: 'smooth', inline: 'center'});
