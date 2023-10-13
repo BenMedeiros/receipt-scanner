@@ -60,7 +60,7 @@ export class TableType {
 }
 
 function addNewRowOnDataEntry(table) {
-  table.element.addEventListener('keydown', (e) => {
+  table.element.addEventListener('input', (e) => {
     const lastRow = table.rows[table.rows.length - 1];
     if (!lastRow) return;
     for (const inputType of lastRow.inputTypes) {

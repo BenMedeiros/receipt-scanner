@@ -19,6 +19,8 @@ export function createGenericForm(id, title, inputTypes) {
   const inputForm = document.createElement("form");
   inputForm.id = 'inputForm-' + id;
   inputForm.classList.add('inputForm');
+  // use custom autocomplete component
+  inputForm.autocomplete = 'off';
   // disable enter as submit
   inputForm.onkeydown = (event) => event.key !== 'Enter';
   // also disable enter as submit?
@@ -70,7 +72,7 @@ export function createFormSection() {
     root: formSectionBodyEl,   // default is the viewport
     delay: 0, // delay to group cb within
     rootMargin: '5px', // margin to exclude visibility
-    threshold: .7 // percentage of target's visible area. Triggers "onIntersection"
+    threshold: .9 // percentage of target's visible area. Triggers "onIntersection"
   });
 }
 

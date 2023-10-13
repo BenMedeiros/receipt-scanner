@@ -1,6 +1,7 @@
 'use strict';
 
 import {formatDate} from "../../js/common/dateUtils.js";
+import {bindAutocomplete} from "../components/autocomplete.js";
 
 const supportedTypes = ['number', 'integer', 'currency', 'string', 'checkbox', 'date'];
 
@@ -52,14 +53,7 @@ export class LabelInputType {
     this.element.name = this.name;
 
     if (this.initialValue !== undefined) {
-      if (this.type === 'checkbox') {
-        this.element.checked = this.initialValue;
-      } else if (this.type === 'date') {
-        this.element.value = formatDate(this.initialValue);
-        console.log(this.initialValue, this.element.value);
-      } else {
-        this.element.value = this.initialValue;
-      }
+      this.setValue(this.initialValue);
     }
 
     if (this.step !== undefined) this.element.step = this.step;
@@ -90,12 +84,12 @@ export class LabelInputType {
     this.parentsElements.push(parentEl);
 
     this.element.classList.toggle('modified', false);
-    //use keyup because we are looking after the change has taken place
-    this.element.addEventListener('keyup', (e) => {
+    // use input to account for increment wheels
+    this.element.addEventListener('input', (e) => {
       this.checkModified();
     });
 
-
+    if (this.autocomplete) this.bindAutocomplete(this.autocomplete);
     return this.element;
   }
 
@@ -170,5 +164,23 @@ export class LabelInputType {
   updateInitialValueToCurrent() {
     this.initialValue = this.getValue();
     this.checkModified();
+  }
+
+  bindAutocomplete(values) {
+    this.autocomplete = values;
+    //if not created yet, do it when created
+    if (!this.element || !this.autocomplete) return;
+    bindAutocomplete(this, (value) => this.setValue(value));
+  }
+
+  setValue(value) {
+    if (this.type === 'checkbox') {
+      this.element.checked = value;
+    } else if (this.type === 'date') {
+      this.element.value = formatDate(value);
+      console.log(value, this.element.value);
+    } else {
+      this.element.value = value;
+    }
   }
 }

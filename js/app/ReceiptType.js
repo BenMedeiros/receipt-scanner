@@ -88,9 +88,11 @@ export class ReceiptType {
     //  goTo newly loaded form
     scrollCarouselToForm(this.id);
     //enable/disable submit button
-    trackChangesForSubmitBtn(this.submitInput, this.storeInput);
-    trackChangesForSubmitBtn(this.submitInput, this.dateInput);
-    trackChangesForSubmitBtn(this.submitInput, this.totalInput);
+    this.trackChangesForSubmitBtn(this.storeInput);
+    this.trackChangesForSubmitBtn(this.dateInput);
+    this.trackChangesForSubmitBtn(this.totalInput);
+
+    this.storeInput.bindAutocomplete(['Twin', 'Boise', 'Atl']);
   }
 
   addItemLine(line) {
@@ -103,9 +105,10 @@ export class ReceiptType {
     };
     this.lineInputs.push(newLine);
     this.tableInput.addRowValues(Object.values(newLine));
+    newLine.item.bindAutocomplete(['Hot Dog', 'Pizza', 'Soda']);
 
     for (const inputType of Object.values(newLine)) {
-      trackChangesForSubmitBtn(this.submitInput, inputType);
+      this.trackChangesForSubmitBtn(inputType);
     }
 
     return newLine;
@@ -151,12 +154,33 @@ export class ReceiptType {
     }
   }
 
+  isInitialValue() {
+    if (!this.storeInput.isInitialValue()) return false;
+    if (!this.dateInput.isInitialValue()) return false;
+    if (!this.totalInput.isInitialValue()) return false;
+    //check for changes in table
+    for (const lineInput of this.lineInputs) {
+      for (const labelInput of Object.values(lineInput)) {
+        if (!labelInput.isInitialValue()) return false;
+      }
+    }
+    return true;
+  }
+
+  trackChangesForSubmitBtn(inputType) {
+    inputType.onModified(() => {
+      if (this.submitInput.disabled && !this.isInitialValue()) {
+        this.submitInput.enable();
+      }
+    });
+    inputType.onUnModified(() => {
+      if (!this.submitInput.disabled && this.isInitialValue()) {
+        this.submitInput.disable()
+      }
+    });
+  }
+
   destroy() {
     if (this.form) this.form.remove();
   }
-}
-
-function trackChangesForSubmitBtn(submitInput, inputType) {
-  inputType.onModified(() => submitInput.enable());
-  inputType.onUnModified(() => submitInput.disable());
 }
