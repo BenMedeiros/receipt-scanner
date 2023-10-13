@@ -62,6 +62,10 @@
   box-sizing: border-box;
 }
 
+.inputForm > div > input.modified {
+  background-color: var(--color-backdrop);
+}
+
 .inputForm input:read-only {
   border: 0;
   box-shadow: none;
@@ -132,5 +136,5 @@ button#deleteReceipt:hover {
 }
 
 #form-section-nav > button.visible {
-  background-color: blue;
+  background-color: var(--color-btn);
 }

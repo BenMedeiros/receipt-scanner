@@ -8,6 +8,8 @@ export class LabelInputType {
   element = null;
   parentsElements = [];
   isModified = false;
+  onModifiedCallbacks = [];
+  onUnModifiedCallbacks = [];
 
   constructor(name, type, labelText, initialValue, placeholder, readOnly) {
     if (name === 'id') {
@@ -54,6 +56,7 @@ export class LabelInputType {
         this.element.checked = this.initialValue;
       } else if (this.type === 'date') {
         this.element.value = formatDate(this.initialValue);
+        console.log(this.initialValue, this.element.value);
       } else {
         this.element.value = this.initialValue;
       }
@@ -85,7 +88,14 @@ export class LabelInputType {
     }
 
     this.parentsElements.push(parentEl);
-    this.trackModified();
+
+    this.element.classList.toggle('modified', false);
+    //use keyup because we are looking after the change has taken place
+    this.element.addEventListener('keyup', (e) => {
+      this.checkModified();
+    });
+
+
     return this.element;
   }
 
@@ -119,21 +129,46 @@ export class LabelInputType {
       } else {
         return this.element.checked !== true;
       }
+    } else if (this.type === 'date') {
+      if (!this.getValue() && !this.initialValue) return true;
+      if (!this.getValue() || !this.initialValue) return false;
+      return this.getValue().valueOf() === this.initialValue.valueOf();
     } else {
       return this.getValue() === this.initialValue;
     }
   }
 
-  trackModified() {
-    this.element.classList.toggle('modified', false);
-    //use keyup because we are looking after the change has taken place
-    this.element.addEventListener('keyup', (e) => {
+  checkModified() {
+    //isModified has changed
+    if (this.isModified === this.isInitialValue()) {
       this.isModified = !this.isInitialValue();
       this.element.classList.toggle('modified', this.isModified);
-    });
+
+      if (this.isModified) {
+        this.onModifiedCallbacks.forEach(cb => cb());
+      } else {
+        this.onUnModifiedCallbacks.forEach(cb => cb());
+      }
+    }
+  }
+
+  //called once when modified
+  onModified(cb) {
+    this.onModifiedCallbacks.push(cb);
+  }
+
+  //called once when returned to no modified
+  onUnModified(cb) {
+    this.onUnModifiedCallbacks.push(cb)
   }
 
   destroy() {
     if (this.element) this.element.remove();
+  }
+
+  //used for monitoring text change status; using a function in case of logging
+  updateInitialValueToCurrent() {
+    this.initialValue = this.getValue();
+    this.checkModified();
   }
 }

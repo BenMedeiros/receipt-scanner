@@ -1,7 +1,7 @@
 'use strict';
 
 export class ButtonType {
-    elements = [];
+    element = null;
     parentsElements = [];
 
     constructor(name, text, onclick, disabled, iconMdiText) {
@@ -46,9 +46,19 @@ export class ButtonType {
         }
 
         parentEl.appendChild(btnEl);
-        this.elements.push(btnEl);
+        this.element = btnEl;
         this.parentsElements.push(parentEl);
         return btnEl;
+    }
+
+    disable(){
+      this.disabled = true;
+      this.element.disabled = true;
+    }
+
+    enable(){
+      this.disabled = false;
+      this.element.disabled = false;
     }
 
 }

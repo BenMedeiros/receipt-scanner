@@ -79,6 +79,7 @@ function addNewRowOnDataEntry(table) {
     //  all second row is initial value too so delete last row
     console.log('removing row', table.rows.length - 1);
     lastRow.tr.remove();
+    lastRow.inputTypes.forEach(inputType => inputType.destroy());
     table.rows.pop();
   });
 }

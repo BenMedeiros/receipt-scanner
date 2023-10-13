@@ -55,7 +55,7 @@ export class ReceiptType {
     console.log(this.id, receipts[this.id]);
     this.idInput = new LabelInputType('gid', 'string', 'id', null, this.id, true);
     this.storeInput = new LabelInputType('store', 'string', 'Store', receipts[this.id].store);
-    this.dateInput = new LabelInputType('date', 'date', 'Date', receipts[this.id].date);
+    this.dateInput = new LabelInputType('date', 'date', 'Date', new Date(receipts[this.id].date));
     this.totalInput = new LabelInputType('total', 'currency', 'Total $', receipts[this.id].total);
 
     this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity'],
@@ -87,6 +87,10 @@ export class ReceiptType {
     this.addItemLine();
     //  goTo newly loaded form
     scrollCarouselToForm(this.id);
+    //enable/disable submit button
+    trackChangesForSubmitBtn(this.submitInput, this.storeInput);
+    trackChangesForSubmitBtn(this.submitInput, this.dateInput);
+    trackChangesForSubmitBtn(this.submitInput, this.totalInput);
   }
 
   addItemLine(line) {
@@ -99,12 +103,21 @@ export class ReceiptType {
     };
     this.lineInputs.push(newLine);
     this.tableInput.addRowValues(Object.values(newLine));
+
+    for (const inputType of Object.values(newLine)) {
+      trackChangesForSubmitBtn(this.submitInput, inputType);
+    }
+
     return newLine;
   }
 
   readForm() {
     receipts[this.id].store = this.storeInput.getValue();
     receipts[this.id].date = this.dateInput.getValue();
+    if (receipts[this.id].date instanceof Date) {
+      console.log('date coneretd');
+      receipts[this.id].date = receipts[this.id].date.valueOf();
+    }
     receipts[this.id].total = this.totalInput.getValue();
     receipts[this.id].lines.length = 0;
     receipts[this.id].isNew = false;
@@ -125,11 +138,25 @@ export class ReceiptType {
     } else {
       localStorage.setItem('receipts', JSON.stringify(receipts));
       formMsg(this.id, 'Receipt saved');
-      // setTimeout(() => this.destroy(), 100);
+
+      this.storeInput.updateInitialValueToCurrent();
+      this.dateInput.updateInitialValueToCurrent();
+      this.totalInput.updateInitialValueToCurrent();
+
+      for (const lineInput of this.lineInputs) {
+        for (const labelInput of Object.values(lineInput)) {
+          labelInput.updateInitialValueToCurrent();
+        }
+      }
     }
   }
 
   destroy() {
     if (this.form) this.form.remove();
   }
+}
+
+function trackChangesForSubmitBtn(submitInput, inputType) {
+  inputType.onModified(() => submitInput.enable());
+  inputType.onUnModified(() => submitInput.disable());
 }

@@ -18,6 +18,7 @@
   --color-scrollbar: #5b6367;
   --color-scrollbar-hover: #555;
 
+  --color-btn: var(--color-backdrop);
   --color-btn-hover: #45a049;
   --color-btn-border: 1px solid #ccc;
   --color-btn-delete: #d02f2f;

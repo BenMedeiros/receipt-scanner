@@ -62,7 +62,6 @@ export function createFormSection() {
   observer = new IntersectionObserver((entries, opts) => {
     entries.forEach(entry => {
       const formId = entry.target.id.substring('inputForm-'.length);
-      console.log(entry.target.id, entry.isIntersecting, formId);
       forms[formId].isVisible = entry.isIntersecting;
       forms[formId].formEl.classList.toggle('visible', entry.isIntersecting);
       forms[formId].navEl.classList.toggle('visible', entry.isIntersecting);
@@ -87,7 +86,6 @@ export function createGoToFormInNav(id) {
 
   const btnEl = goToBtn.createElementIn(formSectionNavEl);
   forms[id].navEl = btnEl;
-  console.log(forms[id]);
 }
 
 export function formMsg(formId, msg) {
