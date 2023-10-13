@@ -118,6 +118,10 @@ export function createGoToFormInNav(id) {
   forms[id].navEl = btnEl;
 }
 
+export function deleteGoToFormInNav(id){
+  forms[id].navEl.remove();
+}
+
 export function formMsg(formId, msg) {
   const p = document.createElement('p');
   p.innerText = msg;

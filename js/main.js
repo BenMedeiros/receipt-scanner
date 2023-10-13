@@ -1,6 +1,6 @@
 'use strict';
 
-import {loadAllReceipts, ReceiptStruct, ReceiptType} from "./app/ReceiptType.js";
+import {loadAllReceipts, ReceiptType} from "./app/ReceiptType.js";
 import {ButtonType} from "../html/tinyComponents/ButtonType.js";
 import {hideFormSection, showFormSection} from "./app/form.js";
 

@@ -2,15 +2,9 @@
 
 import {LabelInputType} from "../../html/tinyComponents/LabelInputType.js";
 import {ButtonType} from "../../html/tinyComponents/ButtonType.js";
-import {createGenericForm, scrollCarouselToForm, formMsg} from "./form.js";
+import {createGenericForm, scrollCarouselToForm, formMsg, deleteGoToFormInNav} from "./form.js";
 import {TableType} from "../../html/components/TableType.js";
-
-let receipts = localStorage.getItem('receipts');
-if (receipts) receipts = JSON.parse(receipts);
-if (!receipts || typeof receipts !== 'object' || !Array.isArray(receipts)) {
-  receipts = [];
-  localStorage.setItem('receipts', JSON.stringify(receipts));
-}
+import {getAllReceipts, getReceipt, newReceipt, updateReceipt, deleteReceipt} from "./receiptEntity.js";
 
 let receiptsLoaded = false;
 
@@ -19,72 +13,61 @@ export function loadAllReceipts() {
     console.log('Receipts already loaded');
     return;
   }
-  for (let i = 0; i < receipts.length; i++) {
+
+  for (const [i, receipt] of Object.entries(getAllReceipts())) {
+    if (receipt.isDeleted) continue;
     new ReceiptType(i).createForm();
   }
+  //
+  // for (let i = 0; i < getAllReceipts().length; i++) {
+  //   new ReceiptType(i).createForm();
+  // }
   receiptsLoaded = true;
   console.log('receipts loaded');
 
 }
 
-
-
-
-export const ReceiptStruct = {
-  store: String,
-  date: Date,
-  total: Number,
-  lines: [{
-    item: String,
-    price: Number,
-    discount: Number,
-    quantity: Number
-  }]
-}
-
 export class ReceiptType {
   constructor(receiptId) {
     if (receiptId >= 0) {
-      if (!receipts[receiptId]) {
+      if (!getReceipt(receiptId)) {
         throw new Error('Receipt id not found: ' + receiptId);
       }
       this.id = receiptId;
-
     } else {
-      //  new receipt
-      this.id = receipts.push({
-        isNew: true,
-        store: null,
-        date: null,
-        total: null,
-        lines: []
-      }) - 1;
+      this.id = newReceipt();
     }
   }
 
   createForm() {
-    console.log(this.id, receipts[this.id]);
     this.idInput = new LabelInputType('gid', 'string', 'id', null, this.id, true);
-    this.storeInput = new LabelInputType('store', 'string', 'Store', receipts[this.id].store);
-    this.dateInput = new LabelInputType('date', 'date', 'Date', new Date(receipts[this.id].date));
-    this.totalInput = new LabelInputType('total', 'currency', 'Total $', receipts[this.id].total);
+    this.storeInput = new LabelInputType('store', 'string', 'Store', getReceipt(this.id).store);
+    this.dateInput = new LabelInputType('date', 'date', 'Date', new Date(getReceipt(this.id).date));
+    this.totalInput = new LabelInputType('total', 'currency', 'Total $', getReceipt(this.id).total);
 
     this.tableInput = new TableType('Lines', ['item', 'price', 'discount', 'quantity'],
       (line) => {
         this.addItemLine(line);
-      }, receipts[this.id].lines);
+      }, getReceipt(this.id).lines);
     this.lineInputs = [];
 
     this.submitInput = new ButtonType('createReceipt',
-      receipts[this.id].isNew ? 'Create Receipt' : 'Save Changes', () => {
+      getReceipt(this.id).isNew ? 'Create Receipt' : 'Save Changes', () => {
         this.readForm()
       }, true);
+
     this.deleteInput = new ButtonType('deleteReceipt', 'Delete Receipt', () => {
-      this.readForm()
+      try {
+        deleteReceipt(this.id);
+        deleteGoToFormInNav(this.id);
+        this.destroy();
+      } catch (e) {
+        formMsg(this.id, e.message);
+      }
     });
 
     this.form = createGenericForm(this.id,
-      receipts[this.id].isNew ? 'New Receipt' : 'Edit ' + this.id, [
+      getReceipt(this.id).isNew ? 'New Receipt' : 'Edit ' + this.id, [
         this.idInput,
         this.storeInput,
         this.dateInput,
@@ -125,15 +108,7 @@ export class ReceiptType {
   }
 
   readForm() {
-    receipts[this.id].store = this.storeInput.getValue();
-    receipts[this.id].date = this.dateInput.getValue();
-    if (receipts[this.id].date instanceof Date) {
-      receipts[this.id].date = receipts[this.id].date.valueOf();
-    }
-    receipts[this.id].total = this.totalInput.getValue();
-    receipts[this.id].lines.length = 0;
-    receipts[this.id].isNew = false;
-
+    const lines = [];
     for (const lineInput of this.lineInputs) {
       const lineObj = {};
       let isBlank = true;
@@ -142,13 +117,17 @@ export class ReceiptType {
         if (isBlank && lineObj[key] !== null) isBlank = false;
       }
       //only store line if the line isn't blank
-      if (!isBlank) receipts[this.id].lines.push(lineObj);
+      if (!isBlank) lines.push(lineObj);
     }
 
-    if (receipts[this.id].lines.length === 0) {
-      formMsg(this.id, 'Must have lines to save receipt.');
-    } else {
-      localStorage.setItem('receipts', JSON.stringify(receipts));
+    try {
+      updateReceipt(this.id,
+        this.storeInput.getValue(),
+        this.dateInput.getValue(),
+        this.totalInput.getValue(),
+        lines
+      );
+
       formMsg(this.id, 'Receipt saved');
 
       this.storeInput.updateInitialValueToCurrent();
@@ -160,6 +139,9 @@ export class ReceiptType {
           labelInput.updateInitialValueToCurrent();
         }
       }
+    } catch (e) {
+      console.error(e.message);
+      formMsg(this.id, e.message);
     }
   }
 
@@ -190,6 +172,9 @@ export class ReceiptType {
   }
 
   destroy() {
-    if (this.form) this.form.remove();
+    setTimeout(() => {
+      if (this.form) this.form.remove();
+      delete this;
+    }, 100);
   }
 }
