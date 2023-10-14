@@ -4,6 +4,7 @@ import {formatDate} from "../../js/common/dateUtils.js";
 import {bindAutocomplete} from "../components/autocomplete.js";
 
 const supportedTypes = ['number', 'integer', 'currency', 'string', 'checkbox', 'date'];
+let idCounter = 0;
 
 export class LabelInputType {
   element = null;
@@ -16,7 +17,7 @@ export class LabelInputType {
     if (name === 'id') {
       throw new Error('id/name cannot be id because it messes up using el.id for some reason');
     }
-    this.id = name;
+    this.id = name + '-' + idCounter++;
     this.name = name;
     //wrapped the type for common scenarios
     if (type === 'number') {
@@ -71,7 +72,7 @@ export class LabelInputType {
       const divEl = document.createElement("div");
 
       const labelEl = document.createElement("label");
-      labelEl.htmlFor = this.name;
+      labelEl.htmlFor = this.id;
       labelEl.innerText = this.labelText;
 
       divEl.appendChild(labelEl);
@@ -178,7 +179,7 @@ export class LabelInputType {
       this.element.checked = value;
     } else if (this.type === 'date') {
       this.element.value = formatDate(value);
-      console.log(value, this.element.value);
+      // console.log(value, this.element.value);
     } else {
       this.element.value = value;
     }

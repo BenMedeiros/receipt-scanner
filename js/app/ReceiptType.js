@@ -5,6 +5,7 @@ import {ButtonType} from "../../html/tinyComponents/ButtonType.js";
 import {createGenericForm, scrollCarouselToForm, formMsg, deleteGoToFormInNav} from "./form.js";
 import {TableType} from "../../html/components/TableType.js";
 import {getAllReceipts, getReceipt, newReceipt, updateReceipt, deleteReceipt} from "./receiptEntity.js";
+import itemEntity from "./itemEntity.js";
 
 let receiptsLoaded = false;
 
@@ -98,7 +99,7 @@ export class ReceiptType {
     };
     this.lineInputs.push(newLine);
     this.tableInput.addRowValues(Object.values(newLine));
-    newLine.item.bindAutocomplete(['Hot Dog', 'Pizza', 'Soda']);
+    newLine.item.bindAutocomplete(itemEntity.items);
 
     for (const inputType of Object.values(newLine)) {
       this.trackChangesForSubmitBtn(inputType);

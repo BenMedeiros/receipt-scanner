@@ -1,5 +1,6 @@
 'use strict';
 
+import itemEntity from "./itemEntity.js";
 
 let receipts = localStorage.getItem('receipts');
 if (receipts) receipts = JSON.parse(receipts);
@@ -52,6 +53,7 @@ export function updateReceipt(id, store, date, total, lines) {
   receipts[id].lines.push(...lines);
 
   localStorage.setItem('receipts', JSON.stringify(receipts));
+  itemEntity.updateAllData(receipts);
 }
 
 export const ReceiptStruct = {
