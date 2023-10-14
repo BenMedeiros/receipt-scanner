@@ -92,3 +92,8 @@ table caption {
 #autocomplete > li.matched {
   font-size: large;
 }
+
+#autocomplete:has(li.matched) > li:not(.matched) {
+  visibility: hidden;
+  display: none;
+}
