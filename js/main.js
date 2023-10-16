@@ -4,7 +4,8 @@ import {loadAllReceipts, ReceiptType} from "./app/ReceiptType.js";
 import {ButtonType} from "../html/tinyComponents/ButtonType.js";
 import {hideFormSection, showFormSection} from "./app/form.js";
 import {createFileUploadBtn, deleteLastCanvas} from "./ocr/fileHandler.js";
-import {deblurColor, whiteBlackByNeighbors} from "./ocr/imageCleaner.js";
+import {isWhiteChunkLevel, isWhitePixelLevel} from "./ocr/imageCleaner.js";
+import {deburImage} from "./ocr/deblur.js";
 
 const createReceiptBtn = new ButtonType('createReceipt', 'Create Receipt', () => {
   if (receiptsShown === false) toggleShowReceiptsState();
@@ -39,16 +40,14 @@ toggleShowReceiptsState(); // hide to start
 createFileUploadBtn();
 
 
-new ButtonType('deblurColor', 'deblurColor', () => {
-  deblurColor();
-}, null, null, navBarEl);
 
-new ButtonType('deleteLastCanvas', 'deleteLastCanvas', () => {
-  deleteLastCanvas();
-}, null, null, navBarEl);
+function navBarBtn(fn){
+  new ButtonType(fn.name, fn.name, () => {
+    fn();
+  }, null, null, navBarEl);
+}
 
-new ButtonType('deletewhiteBlackByNeighborsLastCanvas', 'whiteBlackByNeighbors', () => {
-  whiteBlackByNeighbors();
-}, null, null, navBarEl);
-
-
+navBarBtn(deburImage);
+navBarBtn(deleteLastCanvas);
+navBarBtn(isWhitePixelLevel);
+navBarBtn(isWhiteChunkLevel);

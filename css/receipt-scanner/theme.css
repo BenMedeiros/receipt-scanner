@@ -100,5 +100,6 @@ table caption {
 
 canvas {
   border: solid;
-  width: 100rem;
+  /*width: 20rem;*/
+  width: 50rem;
 }

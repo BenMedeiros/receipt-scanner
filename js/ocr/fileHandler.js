@@ -67,6 +67,8 @@ function deleteCanvases() {
   for (let i = 0; i < openCanvases.length; i++) {
     openCanvases[i].remove();
   }
+  openCanvases.length = 0;
+  currentImageData = null;
 }
 
 export function deleteLastCanvas() {
