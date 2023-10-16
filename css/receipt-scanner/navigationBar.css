@@ -1,6 +1,7 @@
 #navigation-bar {
   width: auto;
   display: flex;
+  flex-wrap: wrap;
   background-color: var(--color-menu-backdrop);
   color: var(--color-menu-border);
   overflow-x: auto;
@@ -22,6 +23,14 @@
   border: .1rem solid var(--color-menu-backdrop);
   border-radius: .5rem;
   padding: .5rem 1rem;
+}
+
+#navigation-bar > button > input {
+  width: 10rem;
+}
+
+#navigation-bar  *::-webkit-file-upload-button {
+  display: none;
 }
 
 /*#navigation-bar > button > a:visited {*/

@@ -87,7 +87,9 @@ function clearAutocomplete() {
 function listenForClose() {
   // don't want to stack them
   if (!listening) {
+    // document.activeElement reflects what was clicked on
     document.addEventListener('click', closeAutocomplete);
+    // document.activeElement reflects before Tab is applied since it's keydown
     document.addEventListener('keydown', closeAutocomplete);
     listening = true;
   }

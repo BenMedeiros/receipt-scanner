@@ -5,12 +5,13 @@ export class ButtonType {
   parentsElements = [];
   textElement = null;
 
-  constructor(name, text, onclick, disabled, iconMdiText) {
+  constructor(name, text, onclick, disabled, iconMdiText, parentEl) {
     this.name = name;
     this.text = text;
     this.disabled = disabled;
     this.onclick = onclick;
     this.iconMdiText = iconMdiText
+    if(parentEl) this.createElementIn(parentEl);
   }
 
   createElementIn(parentEl) {

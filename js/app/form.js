@@ -83,7 +83,8 @@ export function showFormSection() {
   }
 
   if (formSectionEl.style.visibility === 'hidden') {
-    formSectionEl.style.visibility = 'initial';
+    formSectionEl.style.visibility = null;
+    formSectionEl.style.display = null;
     return true;
   }
   return false;
@@ -98,6 +99,7 @@ export function hideFormSection() {
   console.log('hiding now');
   if (formSectionEl.style.visibility !== 'hidden') {
     formSectionEl.style.visibility = 'hidden';
+    formSectionEl.style.display = 'none';
     return true;
   }
   return false;

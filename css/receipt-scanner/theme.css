@@ -97,3 +97,8 @@ table caption {
   visibility: hidden;
   display: none;
 }
+
+canvas {
+  border: solid;
+  width: 100rem;
+}
