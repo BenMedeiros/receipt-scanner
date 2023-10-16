@@ -48,7 +48,7 @@ function loadServerImage(src) {
 
 function createCanvasAndOutputForImg(img) {
   //scale so that the width < 2^10, don't think i care about height though
-  const maxResolutionPower = 9;
+  const maxResolutionPower = 10;
   let scale = Math.pow(2, Math.ceil(Math.log2(img.width) - maxResolutionPower));
   scale = Math.max(scale, 1);
   if (scale !== 1) console.log('Scaled image by ', scale);
@@ -79,9 +79,10 @@ export function deleteLastCanvas() {
 
 // returns the imageData from canvas or last written canvas cache
 export function getCurrentImageData() {
-  if(!currentImageData){
-    const canvas = openCanvases[openCanvases.length-1];
-    if(!canvas) return null;
+  if (!currentImageData) {
+    const canvas = openCanvases[openCanvases.length - 1];
+    if (!canvas) throw new Error('No image exists');
+
     currentImageData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
   }
   return currentImageData;
