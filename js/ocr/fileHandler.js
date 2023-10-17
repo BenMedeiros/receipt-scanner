@@ -88,6 +88,12 @@ export function getCurrentImageData() {
   return currentImageData;
 }
 
+export function getCurrentCanvas(){
+  const canvas = openCanvases[openCanvases.length - 1];
+  if (!canvas) throw new Error('No image exists');
+  return canvas;
+}
+
 export function putNewImageNewCanvas(imageData) {
   currentImageData = imageData;
 

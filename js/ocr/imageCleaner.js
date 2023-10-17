@@ -1,7 +1,8 @@
 'use strict';
 
-import {getCurrentImageData, putNewImageNewCanvas} from "./fileHandler.js";
-import {cheapLineFit} from "../common/dirtyMath.js";
+import {getCurrentCanvas, getCurrentImageData, putNewImageNewCanvas} from "./fileHandler.js";
+import {cheapLineFit, sumOp} from "../common/dirtyMath.js";
+import {drawLine, drawRect} from "../canvas/draw.js";
 
 // highlight each pixel based on if it's white per threshold
 export function isWhitePixelLevel() {
@@ -29,8 +30,15 @@ export function isWhiteChunkLevel() {
   const dataCopy = new Uint8ClampedArray(imageData.data);
   dataCopy.set(imageData.data);
 
-  const chunkSize = 20;
+  const chunkSize = 5;
   const chunkArray = [];
+  const chunkObject = {
+    chunkSize, chunkArray,
+    imageData: {
+      height: imageData.height,
+      width: imageData.width
+    }
+  };
 
   let i = 0;
   for (let y = 0; y < imageData.height - 1; y += chunkSize) {
@@ -44,36 +52,41 @@ export function isWhiteChunkLevel() {
     }
   }
 
-  // putNewImageNewCanvas(imageData);
-  console.log(chunkArray);
-
-  const trimLines = findTrimDimensions(chunkArray);
-  console.log(trimLines);
-  drawTrimLine(trimLines.endLine, imageData, chunkSize);
-  drawTrimLine(trimLines.startLine, imageData, chunkSize);
-
   putNewImageNewCanvas(imageData);
-}
+  findTrimDimensions(chunkObject);
+  console.log(chunkObject);
 
-function drawTrimLine(trimLineObj, imageData, chunkSize) {
-  // draw the trim lines
-  let i = 0;
-  let x = Math.round(trimLineObj.b * chunkSize);
-  for (let y = 0; y < imageData.height; y++) {
-    x = (trimLineObj.m * y) + (trimLineObj.b * chunkSize);
-    i = 4 * (y * imageData.width + Math.round(x));
-    // set 5 px wide
-    setColor(imageData.data, i - 8, 255, 0, 0);
-    setColor(imageData.data, i - 4, 255, 0, 0);
-    setColor(imageData.data, i, 255, 0, 0);
-    setColor(imageData.data, i + 4, 255, 0, 0);
-    setColor(imageData.data, i + 8, 255, 0, 0);
+  const canvas = getCurrentCanvas();
+  drawLine(canvas, 'rgba(255,0,0,0.75)', 5,
+    chunkObject.startLine.x0, chunkObject.startLine.y0, chunkObject.startLine.x1, chunkObject.startLine.y1);
+  drawLine(canvas, 'rgba(255,0,0,0.75)', 5,
+    chunkObject.endLine.x0, chunkObject.endLine.y0, chunkObject.endLine.x1, chunkObject.endLine.y1);
+
+  findVerticalChunkSections(chunkObject);
+
+  for (let i = 0; i < chunkObject.rowMetrics.length; i++) {
+    let metric = chunkObject.rowMetrics[i];
+    if (metric.startX === null) continue;
+
+    let startPixel = metric.startX * chunkSize;
+    let endPixel = metric.endX * chunkSize;
+
+    // draw chunk row lines
+    drawLine(canvas, 'rgba(0,0,255,0.75)', 1,
+      startPixel, i * chunkSize, endPixel, i * chunkSize);
+
+    //  draw a color patch to left of start edge as vertical chunk label
+    drawRect(canvas, `hsl(0, 0%, ${metric.rowSum * 100 / (metric.endX - metric.startX)}%)`,
+      startPixel - 5*chunkSize, i * chunkSize, chunkSize * 5, chunkSize);
   }
 }
 
 //look at the chunks and trim from outside if no whites
-function findTrimDimensions(chunkArray) {
+function findTrimDimensions(chunkObject) {
+  const chunkArray = chunkObject.chunkArray;
   const rowMetrics = new Array(chunkArray.length);
+  chunkObject.rowMetrics = rowMetrics;
+
   for (let i = 0; i < chunkArray.length; i++) {
     rowMetrics[i] = {startX: null, endX: null};
     for (let j = 0; j < chunkArray[i].length; j++) {
@@ -87,12 +100,42 @@ function findTrimDimensions(chunkArray) {
       }
     }
   }
-  console.log(rowMetrics);
 
-  const endLine = cheapLineFit(rowMetrics.map(el => el.endX).filter(el => el !== null));
-  const startLine = cheapLineFit(rowMetrics.map(el => el.startX).filter(el => el !== null));
+  const endLine = cheapLineFit(rowMetrics.map(el => el.endX));
+  const startLine = cheapLineFit(rowMetrics.map(el => el.startX));
 
-  return {startLine, endLine};
+  chunkObject.endLine = {
+    m: endLine.m,
+    b: endLine.b,
+    x0: endLine.b * chunkObject.chunkSize,
+    y0: 0,
+    x1: (endLine.m * chunkObject.imageData.height) + (endLine.b * chunkObject.chunkSize),
+    y1: chunkObject.imageData.height - 1
+  }
+
+  chunkObject.startLine = {
+    m: startLine.m,
+    b: startLine.b,
+    x0: startLine.b * chunkObject.chunkSize,
+    y0: 0,
+    x1: (startLine.m * chunkObject.imageData.height) + (startLine.b * chunkObject.chunkSize),
+    y1: chunkObject.imageData.height - 1
+  }
+}
+
+// within the receipt border, scan down to find white space areas
+function findVerticalChunkSections({chunkArray, rowMetrics}) {
+  for (let i = 0; i < chunkArray.length; i++) {
+    if (rowMetrics[i].startX === null) continue;
+    let rowSum = chunkArray[i].slice(rowMetrics[i].startX, rowMetrics[i].endX).reduce(sumOp);
+    // per chunk, a 1 means 100% isWhite
+    rowMetrics[i].rowSum = Math.round(rowSum * 10) / 10;
+  }
+
+  // how do row levels change per chunk
+  for (let i = 0; i < rowMetrics.length - 1; i++) {
+    rowMetrics[i].nextRowDiff = rowMetrics[i + 1].rowSum - rowMetrics[i].rowSum;
+  }
 }
 
 /*

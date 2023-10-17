@@ -1,11 +1,13 @@
 'use strict';
 
-const sum = (a, b) => a + b;
+export const sumOp = (a, b) => a + b;
 
 // rough estimate of line going thru points, returns {m, b}
 export function cheapLineFit(values) {
+  values = values.filter(el => el !== null);
+
   const xMean = (values.length - 1) / 2;
-  const yMean = values.reduce(sum) / values.length;
+  const yMean = values.reduce(sumOp) / values.length;
 
   let numerator = 0;
   let denominator = 0;
