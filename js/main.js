@@ -6,6 +6,7 @@ import {hideFormSection, showFormSection} from "./app/form.js";
 import {createFileUploadBtn, deleteLastCanvas} from "./ocr/fileHandler.js";
 import {isWhiteChunkLevel, isWhitePixelLevel} from "./ocr/imageCleaner.js";
 import {deburImage} from "./ocr/deblur.js";
+import tesseractHandler from "./ocr/tesseract/tesseractHandler.js";
 
 const createReceiptBtn = new ButtonType('createReceipt', 'Create Receipt', () => {
   if (receiptsShown === false) toggleShowReceiptsState();
@@ -51,3 +52,4 @@ navBarBtn(deburImage);
 navBarBtn(deleteLastCanvas);
 navBarBtn(isWhitePixelLevel);
 navBarBtn(isWhiteChunkLevel);
+navBarBtn(tesseractHandler.processImageFromCanvas)
