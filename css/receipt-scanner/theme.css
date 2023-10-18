@@ -21,8 +21,9 @@
   --color-btn: var(--color-backdrop);
   --color-btn-hover: #45a049;
   --color-btn-border: 1px solid #ccc;
+  --color-btn-disabled: #545759;
   --color-btn-delete: #d02f2f;
-  --color-btn-delete-hover: #d11616
+  --color-btn-delete-hover: #d11616;
 }
 
 body {

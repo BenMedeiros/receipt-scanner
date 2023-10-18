@@ -42,6 +42,11 @@
   border-style: solid;
 }
 
+#navigation-bar > button:disabled > * {
+  color: var(--color-btn-disabled);
+}
+
+
 /*@media (max-aspect-ratio: 5/8) {*/
 /*    #controls-screen {*/
 /*        margin: 0;*/

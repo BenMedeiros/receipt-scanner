@@ -30,3 +30,15 @@ export function addColor(data, i, r, g, b) {
   data[i + 1] = Math.hypot(data[i + 1], g) / 1.414;
   data[i + 2] = Math.hypot(data[i + 2], b) / 1.414;
 }
+
+export function addColorToChunk(imageData, chunkSize, chunkX, chunkY, r, g, b) {
+  let i = 0;
+  for (let y = chunkY; y < chunkY + chunkSize && y < imageData.height - 1; y++) {
+    for (let x = chunkX; x < chunkX + chunkSize && x < imageData.width - 1; x++) {
+      i = 4 * (y * imageData.width + x);
+      addColor(imageData.data, i, r, g, b);
+    }
+  }
+}
+
+

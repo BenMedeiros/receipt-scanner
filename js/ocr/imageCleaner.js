@@ -2,7 +2,8 @@
 
 import {getCurrentCanvas, getCurrentImageData, putNewImageNewCanvas} from "../canvas/fileHandler.js";
 import {cheapLineFit, sumOp} from "../common/dirtyMath.js";
-import {drawLine, drawRect, setColor, addColor} from "../canvas/draw.js";
+import {drawLine, drawRect, setColor, addColor, addColorToChunk} from "../canvas/draw.js";
+import {trackChunkClick} from "../canvas/interactions.js";
 
 // highlight each pixel based on if it's white per threshold
 export function isWhitePixelLevel() {
@@ -63,6 +64,7 @@ export function isWhiteChunkLevel() {
 
   findVerticalChunkSections(chunkObject);
 
+  // draw chunk row lines
   for (let i = 0; i < chunkObject.rowMetrics.length; i++) {
     let metric = chunkObject.rowMetrics[i];
     if (metric.startX === null) continue;
@@ -78,6 +80,9 @@ export function isWhiteChunkLevel() {
     drawRect(canvas, `hsl(0, 0%, ${metric.rowSum * 100 / (metric.endX - metric.startX)}%)`,
       startPixel - 5*chunkSize, i * chunkSize, chunkSize * 5, chunkSize);
   }
+
+  chunkObject.highlightedChunks = [];
+  trackChunkClick(canvas, chunkObject);
 }
 
 //look at the chunks and trim from outside if no whites
@@ -162,12 +167,7 @@ export function isChunkWhite(chunkSize, chunkX, chunkY, imageData) {
   if (count < chunkSize * chunkSize / 4) return whiteRatio;
 
   //same loop of chunk, just coloring since these have decent white
-  for (let y = chunkY; y < chunkY + chunkSize && y < imageData.height - 1; y++) {
-    for (let x = chunkX; x < chunkX + chunkSize && x < imageData.width - 1; x++) {
-      i = 4 * (y * imageData.width + x);
-      addColor(imageData.data, i, 0, 255 * whiteRatio, 0);
-    }
-  }
+  addColorToChunk(imageData, chunkSize, chunkX, chunkY, 0, 255 * whiteRatio, 0);
 
   return whiteRatio;
 }

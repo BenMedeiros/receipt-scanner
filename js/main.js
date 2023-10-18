@@ -42,14 +42,14 @@ createFileUploadBtn();
 
 
 
-function navBarBtn(fn){
+function navBarBtn(fn, disabled){
   new ButtonType(fn.name, fn.name, () => {
     fn();
-  }, null, null, navBarEl);
+  }, disabled, null, navBarEl);
 }
 
 navBarBtn(deburImage);
 navBarBtn(deleteLastCanvas);
 navBarBtn(isWhitePixelLevel);
 navBarBtn(isWhiteChunkLevel);
-navBarBtn(tesseractHandler.processImageFromCanvas)
+navBarBtn(tesseractHandler.processImageFromCanvas, true)
