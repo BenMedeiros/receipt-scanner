@@ -17,3 +17,16 @@ export function drawRect(canvas, color, x, y, w, h) {
   if (color) ctx.fillStyle = color;
   ctx.fillRect(x, y, w, h);
 }
+
+
+export function setColor(data, i, r, g, b) {
+  data[i] = r;
+  data[i + 1] = g;
+  data[i + 2] = b;
+}
+
+export function addColor(data, i, r, g, b) {
+  data[i] = Math.hypot(data[i], r) / 1.414;
+  data[i + 1] = Math.hypot(data[i + 1], g) / 1.414;
+  data[i + 2] = Math.hypot(data[i + 2], b) / 1.414;
+}

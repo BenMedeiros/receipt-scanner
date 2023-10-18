@@ -1,6 +1,6 @@
 'use strict';
 
-import {getCurrentImageData, putNewImageNewCanvas} from "./fileHandler.js";
+import {getCurrentImageData, putNewImageNewCanvas} from "../canvas/fileHandler.js";
 
 export function deburImage() {
   console.log('deblurColor');

@@ -1,8 +1,8 @@
 'use strict';
 
-import {getCurrentCanvas, getCurrentImageData, putNewImageNewCanvas} from "./fileHandler.js";
+import {getCurrentCanvas, getCurrentImageData, putNewImageNewCanvas} from "../canvas/fileHandler.js";
 import {cheapLineFit, sumOp} from "../common/dirtyMath.js";
-import {drawLine, drawRect} from "../canvas/draw.js";
+import {drawLine, drawRect, setColor, addColor} from "../canvas/draw.js";
 
 // highlight each pixel based on if it's white per threshold
 export function isWhitePixelLevel() {
@@ -21,7 +21,6 @@ export function isWhitePixelLevel() {
   }
 
   putNewImageNewCanvas(imageData);
-
 }
 
 // look at a chunk of pixels are see if its white or not, basically blends
@@ -30,7 +29,7 @@ export function isWhiteChunkLevel() {
   const dataCopy = new Uint8ClampedArray(imageData.data);
   dataCopy.set(imageData.data);
 
-  const chunkSize = 5;
+  const chunkSize = 20;
   const chunkArray = [];
   const chunkObject = {
     chunkSize, chunkArray,
@@ -195,16 +194,4 @@ function isWhite(r, g, b) {
   if (g / mag < whiteHueThreshold) return false;
   if (b / mag < whiteHueThreshold) return false;
   return true;
-}
-
-function setColor(data, i, r, g, b) {
-  data[i] = r;
-  data[i + 1] = g;
-  data[i + 2] = b;
-}
-
-function addColor(data, i, r, g, b) {
-  data[i] = Math.hypot(data[i], r) / 1.414;
-  data[i + 1] = Math.hypot(data[i + 1], g) / 1.414;
-  data[i + 2] = Math.hypot(data[i + 2], b) / 1.414;
 }

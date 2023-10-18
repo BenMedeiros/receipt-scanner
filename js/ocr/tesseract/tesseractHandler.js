@@ -1,5 +1,5 @@
 'use strict';
-import {getCurrentCanvas} from "../fileHandler.js";
+import {getCurrentCanvas} from "../../canvas/fileHandler.js";
 
 Tesseract.setLogging(true);
 

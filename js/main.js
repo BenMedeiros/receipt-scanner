@@ -3,7 +3,7 @@
 import {loadAllReceipts, ReceiptType} from "./app/ReceiptType.js";
 import {ButtonType} from "../html/tinyComponents/ButtonType.js";
 import {hideFormSection, showFormSection} from "./app/form.js";
-import {createFileUploadBtn, deleteLastCanvas} from "./ocr/fileHandler.js";
+import {createFileUploadBtn, deleteLastCanvas} from "./canvas/fileHandler.js";
 import {isWhiteChunkLevel, isWhitePixelLevel} from "./ocr/imageCleaner.js";
 import {deburImage} from "./ocr/deblur.js";
 import tesseractHandler from "./ocr/tesseract/tesseractHandler.js";
